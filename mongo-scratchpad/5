@@ -1,0 +1,25 @@
+db.createUser(
+  {
+    user: "someadmin",
+    pwd: "somepass",
+    roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
+  }
+)
+db.createRole(
+  {
+    role: "ismstuff",
+    privileges: [
+      { resource: { db: "ismwrite", collection: "stuff" }, actions: [ "insert", "find" ] }
+    ],
+    roles: []
+  }
+)
+
+
+db.revokeRolesFromUser(
+  "someuser",
+  [
+    { role: "readWrite", db: "ismwrite" },
+    { role: "read", db: "ismread" }
+  ]
+)

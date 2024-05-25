@@ -1,0 +1,38 @@
+db.places.insert({
+	loc : {
+		type : "Point",
+		coordinates : [
+			-73.97,
+			40.77
+		],
+		name : "Central Park",
+		category : "Parks"
+	}
+})
+
+db.places.insert({
+	loc : {
+		type : "Point",
+		coordinates : [
+			-73.88,
+			40.78
+		],
+		name : "La Guardia Airport",
+		category : "Airport"
+	}
+})
+
+db.places.ensureIndex({loc : "2dsphere"})
+
+db.places.find({
+	loc : {
+		$near : {
+			$geometry : {
+				type : "Point",
+				coordinates : [-73.96, 40.78]
+			},
+			$maxDistance : 50000
+		}
+	}
+})
+

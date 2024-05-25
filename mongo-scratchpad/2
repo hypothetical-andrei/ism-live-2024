@@ -1,0 +1,107 @@
+db.people.insert({
+	name : 'alice',
+	addresses : [{
+		street : 'somestreet',
+		number : 3,
+		country : 'us'
+	}, {
+		street : 'someotherstreet',
+		number : 4,
+		country : 'mx'
+	}]
+})
+
+db.people.insert({
+	name : 'bob',
+	addresses : [{
+		street : 'someotherstreet',
+		number : 4,
+		country : 'us'
+	}, {
+		street : 'someotherstreet',
+		number : 4,
+		country : 'ro'
+	}]
+})
+
+db.people.find({
+  addresses: {
+    $elemMatch: {
+      country: 'ro'
+    }
+  }
+}, {
+  _id: 0,
+  name: 1
+})
+
+db.students.updateOne({ name: 'student5' }, { $set: { name: 'jim' } })
+
+
+db.employees.updateMany({}, {
+  $inc: {
+    salary: 50
+  }
+})
+
+db.employees.updateMany({}, {
+  $multiply: {
+    salary: 1.5
+  }
+})
+
+db.employees.aggregate([{
+  $project: {
+    fullName: '$name',
+    job: 1,
+    salary: 1
+  }
+}, {
+  $group: {
+   _id: '$job',
+   avg_salary: {
+    $avg: '$salary'
+   },
+   count: {
+    $sum: 1
+   }
+  }
+}])
+
+var items = [
+  ObjectId('65e454590d8967cecabc9a34'),
+  ObjectId('65e454590d8967cecabc9a35'),
+  ObjectId('65e454590d8967cecabc9a36'),
+  ObjectId('65e454590d8967cecabc9a37'),
+  ObjectId('65e454590d8967cecabc9a38'),
+  ObjectId('65e454590d8967cecabc9a39'),
+  ObjectId('65e454590d8967cecabc9a3a'),
+  ObjectId('65e454590d8967cecabc9a3b'),
+  ObjectId('65e454590d8967cecabc9a3c'),
+  ObjectId('65e454590d8967cecabc9a3d')
+].map(function (e, i){
+	return {
+		username : 'e' + i,
+		type : (i % 2 ? 'limited' : 'full'),
+		details : e
+	}
+})
+
+
+db.users.aggregate([{
+  $lookup: {
+    from: 'students',
+    localField: 'details',
+    foreignField: '_id',
+    as: 'user_details'
+  }
+}, {
+  $unwind: '$user_details'
+}, {
+  $project: {
+    username: 1,
+    name: '$user_details.name',
+    student_number: '$user_details.student_number'
+  }
+}])
+

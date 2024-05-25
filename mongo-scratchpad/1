@@ -1,0 +1,53 @@
+let items = [0,1,2,3,4,5,6,7,8,9].map( e => {
+  return {
+    name: 'student' + e,
+    studentNo: e
+  }
+})
+
+let e = {
+  name: 'john',
+  position: 'programmer',
+  salary: 1000
+}
+
+db.employees.insertOne(e)
+
+e = {
+  name: 'jim',
+  position: 'accountant',
+  salary: 1500
+}
+
+db.employees.insertOne(e)
+
+e = {
+  name: 'jane',
+  position: 'programmer',
+  salary: 1200
+}
+
+db.employees.insertOne(e)
+
+db.employees.find({
+  salary: {
+    $gt: 1000
+  }
+})
+
+db.employees.find({
+  $or: [{
+    position: 'accountant'
+  }, {
+    position: 'programmer',
+    salary: {
+      $gt: 1000
+    }
+  }]
+})
+
+db.employees.find({
+  position: {
+    $in: ['accountant', 'programmer']
+  }
+})
